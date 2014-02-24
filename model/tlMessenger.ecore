@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="tlMessenger" nsURI="http:///tlMessenger.ecore" nsPrefix="tlMessenger">
+  <eSubpackages name="data" nsURI="http:///tlMessenger.ecore/data" nsPrefix="data">
+    <eClassifiers xsi:type="ecore:EEnum" name="MessageType">
+      <eLiterals name="Exit"/>
+      <eLiterals name="BadlyFormattedMessage" value="1"/>
+      <eLiterals name="Echo" value="2" literal="Echo"/>
+      <eLiterals name="Login" value="3"/>
+      <eLiterals name="Logoff" value="4"/>
+      <eLiterals name="CreateUser" value="5"/>
+      <eLiterals name="DeleteUser" value="6"/>
+      <eLiterals name="CreateStore" value="7"/>
+      <eLiterals name="SendMessage" value="8" literal="SendMessage"/>
+      <eLiterals name="QueryMessages" value="9"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MessageData">
+      <eOperations name="getReceivedMessageString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eOperations name="getMessageStringToSend" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eOperations name="MessageData">
+        <eParameters name="receivedText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eOperations>
+      <eOperations name="MessageData">
+        <eParameters name="destUser" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eParameters name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eOperations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="userFrom" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="userTo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="time" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Message">
+      <eOperations name="Message">
+        <eParameters name="type" eType="#//data/MessageType"/>
+        <eParameters name="data" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eOperations>
+      <eOperations name="getBytesToSend" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByteArray"/>
+      <eOperations name="setReceivedMessage">
+        <eParameters name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByteArray"/>
+      </eOperations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//data/MessageType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="subType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+          derived="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="data" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="control" nsURI="http:///tlMessenger.ecore/control" nsPrefix="control">
+    <eClassifiers xsi:type="ecore:EClass" name="CommandHandler">
+      <eOperations name="execute"/>
+      <eOperations name="CommandHandler">
+        <eParameters name="type" eType="#//data/MessageType"/>
+        <eParameters name="parameters" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eOperations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//data/MessageType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="messageToSend" lowerBound="1"
+          eType="#//data/Message"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="parameters" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="messageReceived" lowerBound="1"
+          eType="#//data/Message"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="command" abstract="true" interface="true">
+      <eOperations name="getMessageToSend" eType="#//data/Message">
+        <eParameters name="parameters" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eOperations>
+      <eOperations name="handlerReceivedMessage">
+        <eParameters name="receivedMessage" eType="#//data/Message"/>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Cexit" eSuperTypes="#//control/command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//data/MessageType"
+          changeable="false" defaultValueLiteral="Exit" unsettable="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Cecho" eSuperTypes="#//control/command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//data/MessageType"
+          changeable="false" defaultValueLiteral="Echo" unsettable="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Clogin" eSuperTypes="#//control/command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//data/MessageType"
+          changeable="false" defaultValueLiteral="Login" unsettable="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Clogoff" eSuperTypes="#//control/command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//data/MessageType"
+          changeable="false" defaultValueLiteral="Logoff" unsettable="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CcreateUser" eSuperTypes="#//control/command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//data/MessageType"
+          changeable="false" defaultValueLiteral="CreateUser" unsettable="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CdeleteUser" eSuperTypes="#//control/command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//data/MessageType"
+          changeable="false" defaultValueLiteral="DeleteUser" unsettable="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CcreateStore" eSuperTypes="#//control/command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//data/MessageType"
+          changeable="false" defaultValueLiteral="CreateStore" unsettable="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CsendMessage" eSuperTypes="#//control/command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//data/MessageType"
+          changeable="false" defaultValueLiteral="SendMessage" unsettable="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CqueryMessages" eSuperTypes="#//control/command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//data/MessageType"
+          changeable="false" defaultValueLiteral="QueryMessages" unsettable="true"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="gui" nsURI="http:///tlMessenger.ecore/gui" nsPrefix="gui"/>
+</ecore:EPackage>
