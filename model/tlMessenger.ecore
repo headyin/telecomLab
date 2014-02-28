@@ -104,4 +104,5 @@
           changeable="false" defaultValueLiteral="QueryMessages" unsettable="true"/>
     </eClassifiers>
   </eSubpackages>
+  <eSubpackages name="gui" nsURI="http:///tlMessenger.ecore/gui" nsPrefix="gui"/>
 </ecore:EPackage>
