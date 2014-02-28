@@ -8,5 +8,9 @@ package tlMessenger.command;
  *
  */
 public class QueryMessageCommand extends Command {
+	
+	QueryMessageCommand () {
+		this.name = "query-message";
+	}
 
 }

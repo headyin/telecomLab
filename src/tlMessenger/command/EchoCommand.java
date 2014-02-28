@@ -8,5 +8,9 @@ package tlMessenger.command;
  *
  */
 public class EchoCommand extends Command {
+	
+	EchoCommand() {
+		this.name = "echo";
+	}
 
 }

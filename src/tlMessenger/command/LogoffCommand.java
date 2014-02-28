@@ -8,5 +8,9 @@ package tlMessenger.command;
  *
  */
 public class LogoffCommand extends Command {
+	
+	LogoffCommand () {
+		this.name = "logoff";
+	}
 
 }

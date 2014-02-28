@@ -8,5 +8,9 @@ package tlMessenger.command;
  *
  */
 public class CreateUserCommand extends Command {
+	
+	CreateUserCommand () {
+		this.name = "create-user";
+	}
 
 }

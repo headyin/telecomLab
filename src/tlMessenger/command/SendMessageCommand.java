@@ -8,5 +8,9 @@ package tlMessenger.command;
  *
  */
 public class SendMessageCommand extends Command {
+	
+	SendMessageCommand () {
+		this.name = "send-message";
+	}
 
 }

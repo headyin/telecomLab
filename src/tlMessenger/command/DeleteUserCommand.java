@@ -8,5 +8,9 @@ package tlMessenger.command;
  *
  */
 public class DeleteUserCommand extends Command {
+	
+	DeleteUserCommand () {
+		this.name = "delete-user";
+	}
 
 }

@@ -8,5 +8,9 @@ package tlMessenger.command;
  *
  */
 public class LoginCommand extends Command {
+	
+	LoginCommand () {
+		this.name = "login";
+	}
 
 }

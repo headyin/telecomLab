@@ -9,4 +9,7 @@ package tlMessenger.command;
  */
 public class ExitCommand extends Command {
 
+	ExitCommand() {
+		this.name = "exit";
+	}
 }

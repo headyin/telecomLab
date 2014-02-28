@@ -8,5 +8,9 @@ package tlMessenger.command;
  *
  */
 public class CreateStoreCommand extends Command {
+	
+	CreateStoreCommand() {
+		this.name = "create-store";
+	}
 
 }
