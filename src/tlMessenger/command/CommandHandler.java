@@ -84,14 +84,6 @@ public class CommandHandler {
 		commandNameArray = new String[commandMap.size()];
 		commandMap.keySet().toArray(commandNameArray);
 		
-		this.reader = new CommandLineReader(System.in, commandNameArray);
-	}
-	
-	public void start() {
-		while (true) {
-			String commandLineInput = this.reader.readLine(">>");
-			System.out.println(commandLineInput);
-		}
 	}
 
 }

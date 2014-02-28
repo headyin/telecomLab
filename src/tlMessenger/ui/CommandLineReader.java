@@ -16,34 +16,50 @@ import jline.SimpleCompletor;
 public class CommandLineReader {
 	
 	/**
+	 * the sole instance of CommandLineReader;
+	 */
+	private static CommandLineReader instance = null;
+	
+	public static CommandLineReader getInstance() {
+		if (instance == null) {
+			instance = new CommandLineReader();
+		}
+		return instance;
+	}
+	
+	/**
 	 * jline console reader
 	 */
 	private ConsoleReader reader;
 	
 	/**
-	 * use system.in as input for the line reader
-	 * @throws IOException
+	 * private constructor
 	 */
-	public CommandLineReader(){
-		this(System.in, null);	
+	private CommandLineReader(){
+	}
+	
+	/**
+	 * use system.in as input for the line reader
+	 * @param completorString
+	 */
+	public void init(){
+		this.init(System.in, null);
 	}
 	
 	/**
 	 * use system.in as input and specified auto-completors for the line reader
 	 * @param completorString
-	 * @throws IOException
 	 */
-	public CommandLineReader(String[] completorString){
-		this(System.in, completorString);
+	public void init(String[] completorString){
+		this.init(System.in, completorString);
 	}
 
 	/**
 	 * Use specified input, and auto-completors for the line reader
 	 * @param in
 	 * @param completorString
-	 * @throws IOException
 	 */
-	public CommandLineReader(InputStream in, String[] completorString){
+	public void init (InputStream in, String[] completorString){
 		try {
 			this.reader = new ConsoleReader();
 		} catch (IOException e) {
