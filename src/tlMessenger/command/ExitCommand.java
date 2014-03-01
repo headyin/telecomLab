@@ -3,6 +3,7 @@
  */
 package tlMessenger.command;
 
+import tlMessenger.TLMessenger;
 import tlMessenger.data.Message;
 
 /**
@@ -18,6 +19,7 @@ public class ExitCommand extends Command {
 	@Override
 	public Message execute(String parameter) {
 		// TODO Auto-generated method stub
+		TLMessenger.getInstance().stop();
 		return null;
 	}
 

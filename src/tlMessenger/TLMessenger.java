@@ -59,6 +59,8 @@ public final class TLMessenger {
 	public void start() {
 		this.isRunning = true;
 		while (this.isRunning) {
+			String line = CommandLineReader.getInstance().readLine(">>");
+			CommandHandler.getInstance().handleInputCommand(line);
 		}
 	}
 	
