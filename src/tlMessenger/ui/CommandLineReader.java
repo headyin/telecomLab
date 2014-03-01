@@ -63,7 +63,6 @@ public class CommandLineReader {
 		try {
 			this.reader = new ConsoleReader();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		reader.setInput(in);
@@ -73,25 +72,41 @@ public class CommandLineReader {
 	}
 	
 	/**
-	 * read one line with prompt >>
+	 * read one line
 	 * @return
 	 */
 	public String readLine() {
-		return this.readLine(">>");
+		return this.readLine("", null);
 	}
-	
 	/**
-	 * read one line with specified prompt
+	 * read one line show prompt
 	 * @param prompt
 	 * @return
 	 */
-	public String readLine(String prompt)
+	public String readLine(String prompt) {
+		return this.readLine(prompt, null);
+	}
+	
+	/**
+	 * read one line show mask instead of user input
+	 * @param mask
+	 * @return
+	 */
+	public String readLine(Character mask) {
+		return this.readLine("", mask);
+	}
+	
+	/**
+	 * read one line with specified prompt and mask
+	 * @param prompt
+	 * @return
+	 */
+	public String readLine(String prompt, Character mask)
 	{
 		String line = "";
 		try {
-			line = this.reader.readLine(prompt);
+			line = this.reader.readLine(prompt, mask);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return line;

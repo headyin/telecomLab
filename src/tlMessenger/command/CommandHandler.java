@@ -4,9 +4,6 @@
 package tlMessenger.command;
 
 import java.util.HashMap;
-
-import tlMessenger.ui.CommandLineReader;
-
 /**
  * @author Xinshang, Chandani
  *
@@ -17,11 +14,6 @@ public class CommandHandler {
 	 * The instance of CommandHandler class
 	 */
 	private static CommandHandler instance = null;
-	/**
-	 * Reference to the command line reader
-	 */
-	private CommandLineReader reader;
-	
 	public static CommandHandler getInstance() {
 		if (CommandHandler.instance == null) {
 			CommandHandler.instance = new CommandHandler();
