@@ -57,7 +57,7 @@ public final class TLMessenger {
 	 * 
 	 */
 	public void start() {
-		this.isRunning = true;
+		this.isRunning = CommunicationHandler.getInstance().connect("dsp2014.ece.mcgill.ca", 5000);
 		while (this.isRunning) {
 			String line = CommandLineReader.getInstance().readLine(">>");
 			CommandHandler.getInstance().handleInputCommand(line);

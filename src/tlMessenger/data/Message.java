@@ -22,6 +22,19 @@ public class Message {
 	}
 	
 	/**
+	 * Create a message with specified binary message
+	 * @param first12Bytes, the first 12 bytes
+	 * @param dataBytes, the data bytes
+	 */
+	public Message(byte[] first12Bytes, byte[] dataBytes) {
+		this.binaryFormatMessage = new byte[12 + dataBytes.length];
+		System.arraycopy(first12Bytes, 0, this.binaryFormatMessage, 0, 12);
+		System.arraycopy(dataBytes, 0, this.binaryFormatMessage, 12, dataBytes.length);
+		this.disassembleMessage();
+		this.fieldChanged = false;
+	}
+	
+	/**
 	 * create a message object with message type, sub type and data
 	 * @param messageType
 	 * @param subMessageType
@@ -78,6 +91,11 @@ public class Message {
 	 * message size field
 	 */
 	private int size;
+	
+	/**
+	 * indicate if this message sent to server will have a response message or not
+	 */
+	private boolean haveRespones;
 	
 	/**
 	 * message data field
@@ -166,7 +184,7 @@ public class Message {
 		System.arraycopy(messageTypeInByte, 0, this.binaryFormatMessage, 0, 4);
 		System.arraycopy(subMessageTypeInByte, 0, this.binaryFormatMessage, 4, 4);
 		System.arraycopy(sizeInByte, 0, this.binaryFormatMessage, 8, 4);
-		System.arraycopy(dataInByte, 0, this.binaryFormatMessage, 12, 4);
+		System.arraycopy(dataInByte, 0, this.binaryFormatMessage, 12, this.size);
 		this.fieldChanged = false;
 	}
 	
@@ -187,6 +205,36 @@ public class Message {
 		System.arraycopy(this.binaryFormatMessage, 12, dataInByte, 0, this.size);
 		this.data = new String(dataInByte);
 		this.fieldChanged = false;
+	}
+	
+	/**
+	 * 
+	 * @param binaryMessage
+	 * @return
+	 */
+	public static int expectedDataSize(byte[] binaryMessage) {
+		byte[] sizeInByte = new byte[4];
+		System.arraycopy(binaryMessage, 8, sizeInByte, 0, 4);
+		return ByteBuffer.wrap(sizeInByte).getInt();		
+	}
+	
+	public String toString() {
+		return this.messageType.getName() + " : " + Integer.toString(this.subMessageType)
+				+ " : " + Integer.toString(this.size) + " : " + this.data;
+	}
+
+	/**
+	 * @return the haveRespones
+	 */
+	public boolean isHaveRespones() {
+		return haveRespones;
+	}
+
+	/**
+	 * @param haveRespones the haveRespones to set
+	 */
+	public void setHaveRespones(boolean haveRespones) {
+		this.haveRespones = haveRespones;
 	}
 
 }

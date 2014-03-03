@@ -3,6 +3,7 @@
  */
 package tlMessenger.command;
 
+import tlMessenger.CommunicationHandler;
 import tlMessenger.TLMessenger;
 import tlMessenger.data.Message;
 
@@ -19,6 +20,7 @@ public class ExitCommand extends Command {
 	@Override
 	public Message execute(String parameter) {
 		// TODO Auto-generated method stub
+		CommunicationHandler.getInstance().disconnect();
 		TLMessenger.getInstance().stop();
 		return null;
 	}

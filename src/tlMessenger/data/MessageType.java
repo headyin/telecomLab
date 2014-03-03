@@ -8,16 +8,16 @@ package tlMessenger.data;
  *
  */
 public enum MessageType {
-	EXIT(0),
-	BADLY_FORMATTED_MESSAGE(1),
-	ECHO(2),
-	LOGIN(3),
-	LOGOFF(4),
-	CREATE_USER(5),
-	DELETE_USER(6),
-	CREATE_STORE(7),
-	SEND_MESSAGE(8),
-	QUERY_MESSAGE(9);
+	EXIT(0, "EXIT"),
+	BADLY_FORMATTED_MESSAGE(1, "BADLY_FORMATTED_MESSAGE"),
+	ECHO(2, "ECHO"),
+	LOGIN(3, "LOGIN"),
+	LOGOFF(4, "LOGOFF"),
+	CREATE_USER(5, "CREATE_USER"),
+	DELETE_USER(6, "DELETE_USER"),
+	CREATE_STORE(7, "CREATE_STORE"),
+	SEND_MESSAGE(8, "SEND_MESSAGE"),
+	QUERY_MESSAGE(9, "QUERY_MESSAGE");
 
 	public static final int EXIT_VALUE = 0;
 	public static final int BADLY_FORMATTED_MESSAGE_VALUE = 1;
@@ -35,11 +35,20 @@ public enum MessageType {
 	private final int value;
 	
 	/**
+	 * the name of the message type
+	 */
+	private final String name;
+	
+	/**
 	 * get the value of the message type
 	 * @return
 	 */
 	public int getValue() {
 		return this.value;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 	
 	/**
@@ -67,7 +76,8 @@ public enum MessageType {
 	 * private constructor
 	 * @param value
 	 */
-	private MessageType(int value) {
+	private MessageType(int value, String name) {
 		this.value = value;
+		this.name = name;
 	}
 }

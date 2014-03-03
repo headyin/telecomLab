@@ -4,6 +4,9 @@
 package tlMessenger.command;
 
 import java.util.HashMap;
+
+import tlMessenger.CommunicationHandler;
+import tlMessenger.data.Message;
 /**
  * @author Xinshang, Chandani
  *
@@ -121,7 +124,20 @@ public class CommandHandler {
 			System.out.println("Command " + commandKey + " not found");
 			return;
 		}
-		command.execute(parameter);
+		//execute the command
+		Message message = command.execute(parameter);
+		if (message != null) {
+			 //send message to server
+			CommunicationHandler.getInstance().send(message.getBinaryFormatMessage());
+			if (message.isHaveRespones()) {
+				//if there is response message, wait to receive the response message and handle it in the same command
+				byte[] receiveByte1 = CommunicationHandler.getInstance().receive(12);
+				int dataLength = Message.expectedDataSize(receiveByte1);
+				byte[] receiveByte2 = CommunicationHandler.getInstance().receive(dataLength);
+				Message responesMessage = new Message(receiveByte1, receiveByte2);
+				command.handleResponse(responesMessage);				
+			}
+		}
 	}
 
 }
