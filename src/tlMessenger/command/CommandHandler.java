@@ -83,13 +83,20 @@ public class CommandHandler {
 	 * @return
 	 */
 	private String getCommandKey(String s) {
-		String command = s.substring(0, s.indexOf(" "));
+		int firstSpcaePos = s.indexOf(" ");
+		if (firstSpcaePos < 0) {
+			firstSpcaePos = s.length();
+		}
+		String command = s.substring(0, firstSpcaePos);
 		return command;
 	}
 	
 	private String getCommandParameter(String s) {
 		while (s.charAt(s.length() - 1) == ' ') {
 			s = s.substring(0, s.length() - 1);
+		}
+		if (s.indexOf(" ") == -1) {
+			return "";
 		}
 		String parameter = s.substring(s.indexOf(" ") + 1);
 		while (parameter.charAt(0) == ' ') {

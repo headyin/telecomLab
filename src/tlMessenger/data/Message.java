@@ -3,7 +3,7 @@
  */
 package tlMessenger.data;
 
-import java.io.ByteArrayInputStream;
+import java.nio.ByteBuffer;
 
 /**
  * @author Xinshang, Chandani
@@ -15,12 +15,8 @@ public class Message {
 	 * @param binaryMessage
 	 */
 	public Message(byte[] binaryMessage) {
-		this.binaryFormatMessage = new byte[MAX_MESSAGE_SIZE];
-		if (binaryMessage != null) {
-			for (int i = 0; i < binaryMessage.length; i++) {
-				this.binaryFormatMessage[i] = binaryMessage[i];
-			}
-		}
+		this.binaryFormatMessage = new byte[binaryMessage.length];
+		System.arraycopy(binaryMessage, 0, binaryFormatMessage, 0, binaryMessage.length);
 		this.disassembleMessage();
 		this.fieldChanged = false;
 	}
@@ -41,7 +37,11 @@ public class Message {
 		this.binaryFormatMessage = new byte[MAX_MESSAGE_SIZE];
 		this.messageType = messageType;
 		this.subMessageType = subMessageType;
-		this.data = new String(data.substring(0, MAX_DATA_LENGTH));
+		int dataLength = data.length();
+		if (dataLength > MAX_DATA_LENGTH) {
+			dataLength = MAX_DATA_LENGTH;
+		}
+		this.data = new String(data.substring(0, dataLength));
 		this.size = this.data.length();
 		this.ressambleMessage();
 		this.fieldChanged = false;
@@ -144,7 +144,8 @@ public class Message {
 	 * @param binaryFormatMessage the binaryFormatMessage to set
 	 */
 	public void setBinaryFormatMessage(byte[] binaryFormatMessage) {
-		this.binaryFormatMessage = binaryFormatMessage;
+		this.binaryFormatMessage = new byte[binaryFormatMessage.length];
+		System.arraycopy(binaryFormatMessage, 0, binaryFormatMessage, 0, binaryFormatMessage.length);
 		this.disassembleMessage();
 	}
 	
@@ -153,7 +154,19 @@ public class Message {
 	 */
 	private void ressambleMessage() {
 		this.size = data.length();
-		//TODO:
+		if (this.size > MAX_DATA_LENGTH) {
+			this.size = MAX_DATA_LENGTH;
+		}
+		byte[] messageTypeInByte = ByteBuffer.allocate(4).putInt(this.messageType.getValue()).array();
+		byte[] subMessageTypeInByte = ByteBuffer.allocate(4).putInt(this.subMessageType).array();
+		byte[] sizeInByte = ByteBuffer.allocate(4).putInt(this.size).array();
+		byte[] dataInByte = this.data.getBytes();
+		this.binaryFormatMessage = new byte[4*3 + dataInByte.length];
+		//System.out.println(this.data.length() + "\n" + dataInByte.length);
+		System.arraycopy(messageTypeInByte, 0, this.binaryFormatMessage, 0, 4);
+		System.arraycopy(subMessageTypeInByte, 0, this.binaryFormatMessage, 4, 4);
+		System.arraycopy(sizeInByte, 0, this.binaryFormatMessage, 8, 4);
+		System.arraycopy(dataInByte, 0, this.binaryFormatMessage, 12, 4);
 		this.fieldChanged = false;
 	}
 	
@@ -161,7 +174,18 @@ public class Message {
 	 * disassemble the binary format message to the 4 fields
 	 */
 	private void disassembleMessage() {
-		//TODO:
+		byte[] messageTypeInByte = new byte[4];
+		byte[] subMessageTypeInByte = new byte[4];
+		byte[] sizeInByte = new byte[4];
+		System.arraycopy(this.binaryFormatMessage, 0, messageTypeInByte, 0, 4);
+		System.arraycopy(this.binaryFormatMessage, 4, subMessageTypeInByte, 0, 4);
+		System.arraycopy(this.binaryFormatMessage, 8, sizeInByte, 0, 4);
+		this.messageType = MessageType.getByValue(ByteBuffer.wrap(messageTypeInByte).getInt());
+		this.subMessageType = ByteBuffer.wrap(subMessageTypeInByte).getInt();
+		this.size = ByteBuffer.wrap(sizeInByte).getInt();
+		byte[] dataInByte = new byte[this.size];
+		System.arraycopy(this.binaryFormatMessage, 12, dataInByte, 0, this.size);
+		this.data = new String(dataInByte);
 		this.fieldChanged = false;
 	}
 
