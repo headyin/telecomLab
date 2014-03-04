@@ -103,6 +103,7 @@ public class CommunicationHandler {
 	public boolean send(byte[] message) {
 		try {
 			outputStream.write(message);
+			outputStream.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;

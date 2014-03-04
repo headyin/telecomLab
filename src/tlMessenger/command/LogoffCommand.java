@@ -4,6 +4,7 @@
 package tlMessenger.command;
 
 import tlMessenger.data.Message;
+import tlMessenger.data.MessageType;
 
 /**
  * @author Xinshang, Chandani
@@ -17,14 +18,19 @@ public class LogoffCommand extends Command {
 
 	@Override
 	public Message execute(String parameter) {
-		// TODO Auto-generated method stub
-		return null;
+		Message message = new Message(MessageType.LOGOFF, 0, " ");
+		message.setHaveRespones(true);
+		return message;
 	}
 
 	@Override
 	public void handleResponse(Message message) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(message.toString());
+		switch (message.getSubMessageType()) {
+		case 0: System.out.println("Logoff OK"); break;
+		case 1: System.out.println("Not Logged In"); break;
+		case 2: System.out.println("Session Expired"); break;
+		}	
 	}
 
 }
