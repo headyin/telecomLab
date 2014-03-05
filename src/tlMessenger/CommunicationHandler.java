@@ -10,11 +10,33 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import tlMessenger.command.CommandHandler;
+import tlMessenger.data.Message;
+
 /**
  * @author Xinshang, Chandani
  *
  */
-public class CommunicationHandler {
+public class CommunicationHandler implements Runnable{
+	/**
+	 * indicate if the communication handler receiver thread is running or not
+	 */
+	boolean running;
+	
+	/**
+	 * @return the running
+	 */
+	public synchronized boolean isRunning() {
+		return running;
+	}
+
+	/**
+	 * @param running the running to set
+	 */
+	public synchronized void setRunning(boolean running) {
+		this.running = running;
+	}
+
 	/**
 	 * socket connection to the char server
 	 */
@@ -114,8 +136,10 @@ public class CommunicationHandler {
 		byte[] buffer = new byte[length];
 		int pos = 0;
 		try {
-			while ((pos < length)) {
-				pos += inputStream.read(buffer, pos , length - pos);
+			while ((pos < length) && this.isRunning()) {
+				if (inputStream.available() > 0) {
+					pos += inputStream.read(buffer, pos , length - pos);
+				}
 			}
 
 		} catch (IOException e) {
@@ -123,5 +147,21 @@ public class CommunicationHandler {
 		}
 		return buffer;		
 	}
+	
+	public void stop() {
+		this.setRunning(false);
+	}
 
+	@Override
+	public void run() {
+		this.setRunning(true);
+		while (this.isRunning()) {
+			byte[] receiveByte1 = this.receive(12);
+			int dataLength = Message.expectedDataSize(receiveByte1);
+			byte[] receiveByte2 = this.receive(dataLength);
+			Message responesMessage = new Message(receiveByte1, receiveByte2);
+			CommandHandler.getInstance().handleInputMessage(responesMessage);
+		}
+		System.out.println("Message receiver thread stops");
+	}
 }

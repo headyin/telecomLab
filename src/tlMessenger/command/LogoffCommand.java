@@ -14,7 +14,7 @@ import tlMessenger.data.UserInfo;
 public class LogoffCommand extends Command {
 	
 	LogoffCommand () {
-		this.name = "logoff";
+		this.name = MessageType.LOGOFF.getCommandName();
 	}
 
 	@Override

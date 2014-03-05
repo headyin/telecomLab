@@ -14,7 +14,7 @@ import tlMessenger.data.UserInfo;
 public class CreateStoreCommand extends Command {
 
 	CreateStoreCommand() {
-		this.name = "create-store";
+		this.name = MessageType.CREATE_STORE.getCommandName();
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import tlMessenger.data.MessageType;
 public class EchoCommand extends Command {
 	
 	EchoCommand() {
-		this.name = "echo";
+		this.name = MessageType.ECHO.getCommandName();
 	}
 
 	@Override

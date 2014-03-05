@@ -15,7 +15,7 @@ import tlMessenger.ui.CommandLineReader;
 public class LoginCommand extends Command {
 	
 	LoginCommand () {
-		this.name = "login";
+		this.name = MessageType.LOGIN.getCommandName();
 	}
 
 	@Override

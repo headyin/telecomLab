@@ -112,6 +112,17 @@ public class CommandHandler {
 	}
 	
 	/**
+	 * Handle the response message received from server
+	 * @param message received message
+	 */
+	public synchronized void handleInputMessage(Message message) {
+		Command command = commandMap.get(message.getMessageType().getCommandName());
+		if (command != null) {
+			command.handleResponse(message);
+		}
+	}
+	
+	/**
 	 * Handle the input command
 	 * @param command
 	 */
@@ -134,14 +145,6 @@ public class CommandHandler {
 		if (message != null) {
 			 //send message to server
 			CommunicationHandler.getInstance().send(message.getBinaryFormatMessage());
-			if (message.isHaveRespones()) {
-				//if there is response message, wait to receive the response message and handle it in the same command
-				byte[] receiveByte1 = CommunicationHandler.getInstance().receive(12);
-				int dataLength = Message.expectedDataSize(receiveByte1);
-				byte[] receiveByte2 = CommunicationHandler.getInstance().receive(dataLength);
-				Message responesMessage = new Message(receiveByte1, receiveByte2);
-				command.handleResponse(responesMessage);				
-			}
 		}
 	}
 

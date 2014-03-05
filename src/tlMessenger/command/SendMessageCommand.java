@@ -14,7 +14,7 @@ import tlMessenger.ui.CommandLineReader;
 public class SendMessageCommand extends Command {
 
 	SendMessageCommand () {
-		this.name = "send-message";
+		this.name = MessageType.SEND_MESSAGE.getCommandName();
 	}
 
 	@Override

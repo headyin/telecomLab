@@ -14,7 +14,7 @@ import tlMessenger.data.UserInfo;
 public class DeleteUserCommand extends Command {
 	
 	DeleteUserCommand () {
-		this.name = "delete-user";
+		this.name = MessageType.DELETE_USER.getCommandName();
 	}
 
 	@Override

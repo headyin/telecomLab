@@ -24,6 +24,11 @@ public final class TLMessenger {
 	private Thread pollerThread;
 	
 	/**
+	 * receiver thread
+	 */
+	private Thread receiverThread;
+	
+	/**
 	 * 
 	 * @return instance of TLMessenger
 	 */
@@ -66,17 +71,23 @@ public final class TLMessenger {
 		this.isRunning = CommunicationHandler.getInstance().connect("dsp2014.ece.mcgill.ca", 5000);
 		MessagePoller.getInstance().init(UserInfo.getInstance(), CommandHandler.getInstance());
 		this.pollerThread = new Thread(MessagePoller.getInstance());
-		pollerThread.start();
+		this.receiverThread = new Thread(CommunicationHandler.getInstance());
+		
+		this.receiverThread.start();
+		this.pollerThread.start();
+		
 		while (this.isRunning) {
 			String line = CommandLineReader.getInstance().readLine(">>");
 			CommandHandler.getInstance().handleInputCommand(line);
 		}
 		//wait until poller thread ends
 		try {
-			this.pollerThread.join();;
+			this.pollerThread.join();
+			this.receiverThread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		CommunicationHandler.getInstance().disconnect();
 	}
 	
 	/**
@@ -84,6 +95,7 @@ public final class TLMessenger {
 	 */
 	public void stop() {
 		MessagePoller.getInstance().stop();
+		CommunicationHandler.getInstance().stop();
 		this.isRunning = false;
 	}
 

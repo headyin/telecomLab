@@ -3,9 +3,9 @@
  */
 package tlMessenger.command;
 
-import tlMessenger.CommunicationHandler;
 import tlMessenger.TLMessenger;
 import tlMessenger.data.Message;
+import tlMessenger.data.MessageType;
 
 /**
  * @author Xinshang, Chandani
@@ -14,12 +14,11 @@ import tlMessenger.data.Message;
 public class ExitCommand extends Command {
 
 	ExitCommand() {
-		this.name = "exit";
+		this.name = MessageType.EXIT.getCommandName();
 	}
 
 	@Override
 	public Message execute(String parameter) {
-		CommunicationHandler.getInstance().disconnect();
 		TLMessenger.getInstance().stop();
 		return null;
 	}

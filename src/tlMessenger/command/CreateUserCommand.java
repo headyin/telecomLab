@@ -14,7 +14,7 @@ import tlMessenger.ui.CommandLineReader;
 public class CreateUserCommand extends Command {
 	
 	CreateUserCommand () {
-		this.name = "create-user";
+		this.name = MessageType.CREATE_USER.getCommandName();
 	}
 
 	@Override

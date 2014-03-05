@@ -4,6 +4,7 @@
 package tlMessenger;
 
 import tlMessenger.command.CommandHandler;
+import tlMessenger.data.MessageType;
 import tlMessenger.data.UserInfo;
 
 /**
@@ -81,7 +82,7 @@ public class MessagePoller implements Runnable {
 	 * stop messagePoller
 	 */
 	public synchronized void stop() {
-		this.running = false;
+		this.setRunning(false);
 	}
 
 	/**
@@ -114,12 +115,11 @@ public class MessagePoller implements Runnable {
 		this.setRunning(true);
 		while (this.isRunning()) {
 			if (this.userInfo.isLoggedIn() && this.userInfo.isStorageCreated()) {
-				this.commandHandler.handleInputCommand("query-message");
+				this.commandHandler.handleInputCommand(MessageType.QUERY_MESSAGE.getCommandName());
 			}
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

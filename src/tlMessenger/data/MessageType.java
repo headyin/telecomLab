@@ -8,16 +8,16 @@ package tlMessenger.data;
  *
  */
 public enum MessageType {
-	EXIT(0, "EXIT"),
-	BADLY_FORMATTED_MESSAGE(1, "BADLY_FORMATTED_MESSAGE"),
-	ECHO(2, "ECHO"),
-	LOGIN(3, "LOGIN"),
-	LOGOFF(4, "LOGOFF"),
-	CREATE_USER(5, "CREATE_USER"),
-	DELETE_USER(6, "DELETE_USER"),
-	CREATE_STORE(7, "CREATE_STORE"),
-	SEND_MESSAGE(8, "SEND_MESSAGE"),
-	QUERY_MESSAGE(9, "QUERY_MESSAGE");
+	EXIT(0, "EXIT", "exit"),
+	BADLY_FORMATTED_MESSAGE(1, "BADLY_FORMATTED_MESSAGE", "NOP"),
+	ECHO(2, "ECHO", "echo"),
+	LOGIN(3, "LOGIN", "login"),
+	LOGOFF(4, "LOGOFF", "logoff"),
+	CREATE_USER(5, "CREATE_USER", "create-user"),
+	DELETE_USER(6, "DELETE_USER", "delete-user"),
+	CREATE_STORE(7, "CREATE_STORE", "create-store"),
+	SEND_MESSAGE(8, "SEND_MESSAGE", "send-message"),
+	QUERY_MESSAGE(9, "QUERY_MESSAGE", "query-message");
 
 	public static final int EXIT_VALUE = 0;
 	public static final int BADLY_FORMATTED_MESSAGE_VALUE = 1;
@@ -39,6 +39,18 @@ public enum MessageType {
 	 */
 	private final String name;
 	
+	/**
+	 * command name of message type
+	 */
+	private final String commandName;
+	
+	/**
+	 * @return the commandName
+	 */
+	public String getCommandName() {
+		return commandName;
+	}
+
 	/**
 	 * get the value of the message type
 	 * @return
@@ -76,8 +88,18 @@ public enum MessageType {
 	 * private constructor
 	 * @param value
 	 */
-	private MessageType(int value, String name) {
+	private MessageType(int value, String name, String commandName) {
 		this.value = value;
 		this.name = name;
+		this.commandName = commandName;
+	}
+	
+	/**
+	 * check if two message types are equal
+	 * @param messageType
+	 * @return
+	 */
+	public boolean equals(MessageType messageType) {
+		return this.value == messageType.getValue();
 	}
 }
