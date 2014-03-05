@@ -5,6 +5,7 @@ package tlMessenger.command;
 
 import tlMessenger.data.Message;
 import tlMessenger.data.MessageType;
+import tlMessenger.data.UserInfo;
 
 /**
  * @author Xinshang, Chandani
@@ -30,7 +31,8 @@ public class LogoffCommand extends Command {
 		case 0: System.out.println("Logoff OK"); break;
 		case 1: System.out.println("Not Logged In"); break;
 		case 2: System.out.println("Session Expired"); break;
-		}	
+		}
+		UserInfo.getInstance().setLoggedIn(false);
 	}
 
 }

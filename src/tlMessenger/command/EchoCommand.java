@@ -3,7 +3,6 @@
  */
 package tlMessenger.command;
 
-import tlMessenger.CommunicationHandler;
 import tlMessenger.data.Message;
 import tlMessenger.data.MessageType;
 

@@ -34,13 +34,18 @@ public class LoginCommand extends Command {
 
 	@Override
 	public void handleResponse(Message message) {
+		boolean loggedIn = false;
 		System.out.println(message.toString());
 		switch (message.getSubMessageType()) {
-		case 0: System.out.println("Login Ok"); break;
-		case 1: System.out.println("User already logged in"); break;
+		case 0: System.out.println("Login Ok"); loggedIn = true; break;
+		case 1: System.out.println("User already logged in"); loggedIn = true; break;
 		case 2: System.out.println("Bad credentials"); break;
 		case 3: System.out.println("Badly formatted message"); break;
-		}		
+		}
+		if (loggedIn) {
+			 UserInfo.getInstance().setLoggedIn(true);
+			 CommandHandler.getInstance().handleInputCommand("create-store");
+		}
 	}
 
 }

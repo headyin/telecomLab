@@ -99,7 +99,7 @@ public class CommandHandler {
 			s = s.substring(0, s.length() - 1);
 		}
 		if (s.indexOf(" ") == -1) {
-			return "";
+			return " ";
 		}
 		String parameter = s.substring(s.indexOf(" ") + 1);
 		while (parameter.charAt(0) == ' ') {
@@ -112,7 +112,7 @@ public class CommandHandler {
 	 * Handle the input command
 	 * @param command
 	 */
-	public void handleInputCommand(String userInput) {
+	public synchronized void handleInputCommand(String userInput) {
 		String commandKey = this.getCommandKey(userInput);
 		String parameter = this.getCommandParameter(userInput);
 		

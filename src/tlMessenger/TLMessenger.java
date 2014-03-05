@@ -4,6 +4,7 @@
 package tlMessenger;
 
 import tlMessenger.command.CommandHandler;
+import tlMessenger.data.UserInfo;
 import tlMessenger.ui.CommandLineReader;
 
 /**
@@ -16,6 +17,11 @@ public final class TLMessenger {
 	 * Singleton class instance
 	 */
 	private static TLMessenger instance = null;
+	
+	/**
+	 * message poller thread
+	 */
+	private Thread pollerThread;
 	
 	/**
 	 * 
@@ -58,16 +64,27 @@ public final class TLMessenger {
 	 */
 	public void start() {
 		this.isRunning = CommunicationHandler.getInstance().connect("dsp2014.ece.mcgill.ca", 5000);
+		MessagePoller.getInstance().init(UserInfo.getInstance(), CommandHandler.getInstance());
+		this.pollerThread = new Thread(MessagePoller.getInstance());
+		pollerThread.start();
 		while (this.isRunning) {
 			String line = CommandLineReader.getInstance().readLine(">>");
 			CommandHandler.getInstance().handleInputCommand(line);
 		}
+		//wait until poller thread ends
+		try {
+			this.pollerThread.join();;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
-	 * 
+	 * stop TLMessenger
 	 */
 	public void stop() {
+		MessagePoller.getInstance().stop();
 		this.isRunning = false;
 	}
 
