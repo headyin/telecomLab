@@ -4,6 +4,7 @@
 package tlMessenger.command;
 
 import tlMessenger.data.Message;
+import tlMessenger.data.MessageType;
 
 /**
  * @author Xinshang, Chandani
@@ -17,14 +18,18 @@ public class QueryMessageCommand extends Command {
 
 	@Override
 	public Message execute(String parameter) {
-		// TODO Auto-generated method stub
-		return null;
+		Message message = new Message(MessageType.QUERY_MESSAGE, 0, " ");
+		message.setHaveRespones(true);
+		return message;
 	}
 
 	@Override
 	public void handleResponse(Message message) {
-		// TODO Auto-generated method stub
-		
+		switch (message.getSubMessageType()){
+		case 0: break;
+		case 1:
+			System.out.println("New Message: " + message.getData()); break;
+		}
 	}
 
 }

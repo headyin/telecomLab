@@ -75,7 +75,6 @@ public final class TLMessenger {
 		try {
 			this.pollerThread.join();;
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

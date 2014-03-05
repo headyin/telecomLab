@@ -18,14 +18,7 @@ public class CreateStoreCommand extends Command {
 	}
 
 	@Override
-	public Message execute(String parameter) {
-		// TODO Auto-generated method stub
-		//String messageToStore = CommandLineReader.getInstance().readLine("");
-		//while(messageToStore.){
-			
-		//}
-		UserInfo.getInstance().setStorageCreated(true);
-		
+	public Message execute(String parameter) {		
 		Message message = new Message(MessageType.CREATE_STORE, 0, " ");
 		message.setHaveRespones(true);
 		return message;

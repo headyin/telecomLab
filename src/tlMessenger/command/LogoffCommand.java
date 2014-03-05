@@ -33,6 +33,7 @@ public class LogoffCommand extends Command {
 		case 2: System.out.println("Session Expired"); break;
 		}
 		UserInfo.getInstance().setLoggedIn(false);
+		UserInfo.getInstance().setStorageCreated(false);
 	}
 
 }

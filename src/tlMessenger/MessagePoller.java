@@ -116,6 +116,12 @@ public class MessagePoller implements Runnable {
 			if (this.userInfo.isLoggedIn() && this.userInfo.isStorageCreated()) {
 				this.commandHandler.handleInputCommand("query-message");
 			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		System.out.println("Message poller thread stops.");
 	}

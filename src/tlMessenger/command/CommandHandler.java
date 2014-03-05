@@ -95,6 +95,9 @@ public class CommandHandler {
 	}
 	
 	private String getCommandParameter(String s) {
+		if (s.length() == 0) {
+			return s;
+		}
 		while (s.charAt(s.length() - 1) == ' ') {
 			s = s.substring(0, s.length() - 1);
 		}
@@ -121,7 +124,9 @@ public class CommandHandler {
 		
 		Command command = commandMap.get(commandKey);
 		if (command == null) {
-			System.out.println("Command " + commandKey + " not found");
+			if (commandKey.length() > 0) {
+				System.out.println("Command " + commandKey + " not found");
+			}
 			return;
 		}
 		//execute the command

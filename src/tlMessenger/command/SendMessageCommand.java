@@ -19,8 +19,11 @@ public class SendMessageCommand extends Command {
 
 	@Override
 	public Message execute(String parameter) {
-		// TODO Auto-generated method stud
 		String destUserName = CommandLineReader.getInstance().readLine("dest_username:");
+		while (destUserName.indexOf(",") != -1) {
+			System.out.println("User name cannot contain a comma, please enter again");
+			destUserName = CommandLineReader.getInstance().readLine("est_username:");
+		}
 		String sentMessage = CommandLineReader.getInstance().readLine("message:");
 		Message message = new Message(MessageType.SEND_MESSAGE, 0, destUserName + "," + sentMessage);
 		message.setHaveRespones(true);
@@ -29,7 +32,6 @@ public class SendMessageCommand extends Command {
 
 	@Override
 	public void handleResponse(Message message) {
-		// TODO Auto-generated method stub
 		System.out.println(message.toString());
 		switch (message.getSubMessageType()){
 		case 0:
@@ -42,7 +44,6 @@ public class SendMessageCommand extends Command {
 			System.out.println("Not Logged In"); break;
 		case 4:
 			System.out.println("Badly Formatted"); break;
-
 		}
 
 	}

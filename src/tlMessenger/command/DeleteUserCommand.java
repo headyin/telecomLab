@@ -19,27 +19,30 @@ public class DeleteUserCommand extends Command {
 
 	@Override
 	public Message execute(String parameter) {
-		// TODO Auto-generated method stub
-		UserInfo.getInstance().setLoggedIn(false);
-		UserInfo.getInstance().setStorageCreated(false);
-
-		Message message = new Message(MessageType.DELETE_USER, 0,null);
+		Message message = new Message(MessageType.DELETE_USER, 0, " ");
 		message.setHaveRespones(true);
 		return message;
 	}
 
 	@Override
 	public void handleResponse(Message message) {
-		// TODO Auto-generated method stub
+		boolean deleted = false;
 		System.out.println(message.toString());
 		switch (message.getSubMessageType()){
 		case 0:
-			System.out.println("User Deletion Success"); break;
+			System.out.println("User Deletion Success");
+			deleted = true;
+			break;
 		case 1:
-			System.out.println("Not Logged In"); break;
+			System.out.println("Not Logged In");
+			deleted = true;
+			break;
 		case 2:
 			System.out.println("General Error"); break;
-
+		}
+		if (deleted) {
+			UserInfo.getInstance().setLoggedIn(false);
+			UserInfo.getInstance().setStorageCreated(false);
 		}
 		
 	}
