@@ -1,7 +1,10 @@
 package networking;
 
-import java.net.*;
+//import java.net.*;
 import java.io.IOException;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
 
 import networking.auth.AuthenticationManager;
 import networking.auth.IAuthenticator;
@@ -12,14 +15,18 @@ import logging.Logfile;
 public class ServerSocketListener extends Thread implements IAuthenticator {
 
 	private boolean alive;
-	private ServerSocket socket;
+	//private ServerSocket socket;
 	private IResource resource;
+	private SSLServerSocketFactory sslSSF;
+	private SSLServerSocket sslserversocket;
 	
 	private AuthenticationManager manager;
 	
 	public ServerSocketListener(int port, IResource resource) {
 		try {
-			this.socket = new ServerSocket(port);
+			this.sslSSF = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+			this. sslserversocket =
+                    (SSLServerSocket) sslSSF.createServerSocket(port);
 			this.resource = resource; 
 			alive = true;
 			
@@ -36,7 +43,7 @@ public class ServerSocketListener extends Thread implements IAuthenticator {
 		while(alive) {
 			try {
 				Logfile.writeToFile("Waiting for a new client connection", LogLevel.DEBUG);
-				Socket client = socket.accept();
+	            SSLSocket client = (SSLSocket) sslserversocket.accept();
 				ClientProcessor cp = new ClientProcessor(client, resource, manager);
 				cp.start();
 				Logfile.writeToFile("Accepted connection from: " + client.getInetAddress().getHostAddress(), LogLevel.DEBUG);
@@ -49,7 +56,7 @@ public class ServerSocketListener extends Thread implements IAuthenticator {
 	
 	public void kill() {
 		try {
-			this.socket.close();
+			this.sslserversocket.close();
 		} catch (IOException e) {
 			Logfile.writeToFile("Failed to close server socket", LogLevel.CRITICAL);
 		}

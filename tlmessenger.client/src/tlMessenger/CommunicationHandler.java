@@ -9,6 +9,9 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
 
 import tlMessenger.command.CommandHandler;
 import tlMessenger.data.Message;
@@ -42,6 +45,10 @@ public class CommunicationHandler implements Runnable{
 	 */
 	private Socket serverSocket;
 	
+	private SSLSocketFactory sslsocketfactory;
+    private SSLSocket sslsocket;
+
+    
 	/**
 	 * Stream for sending data to server
 	 */
@@ -90,9 +97,11 @@ public class CommunicationHandler implements Runnable{
 			return false;
 		}
 		try {
-			serverSocket = new Socket(serverIp, port);
-			outputStream = new DataOutputStream(serverSocket.getOutputStream());
-			inputStream = serverSocket.getInputStream();
+			sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+			sslsocket = (SSLSocket) sslsocketfactory.createSocket(serverIp, port);
+			//serverSocket = new Socket(serverIp, port);
+			outputStream = new DataOutputStream(sslsocket.getOutputStream());
+			inputStream = sslsocket.getInputStream();
 		} catch (IOException e) {
 			System.out.println("Cannot connect to the server.");
 			return false;
