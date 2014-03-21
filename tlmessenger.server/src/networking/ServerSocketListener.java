@@ -24,7 +24,7 @@ public class ServerSocketListener extends Thread implements IAuthenticator {
 	
 	public ServerSocketListener(int port, IResource resource) {
 		try {
-			System.setProperty("javax.net.ssl.keyStore", "./certificate/cacert.key");
+			System.setProperty("javax.net.ssl.keyStore", "./certificate/keystore.jks");
 			System.setProperty("javax.net.ssl.keyStorePassword", "ECSE489");
 			this.sslSSF = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 			this. sslserversocket =

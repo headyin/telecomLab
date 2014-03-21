@@ -93,8 +93,8 @@ public class CommunicationHandler implements Runnable{
 			System.out.println("Cannot get server IP address");
 			return false;
 		}
-		System.setProperty("javax.net.ssl.keyStore", "./certificate/cacert.key");
-		System.setProperty("javax.net.ssl.keyStorePassword", "ECSE489");
+		System.setProperty("javax.net.ssl.trustStore", "./certificate/keystore.jks");
+		System.setProperty("javax.net.ssl.trustStorePassword", "ECSE489");
 		try {
 			sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 			sslsocket = (SSLSocket) sslsocketfactory.createSocket(serverIp, port);
@@ -131,6 +131,7 @@ public class CommunicationHandler implements Runnable{
 	 */
 	public boolean send(byte[] message) {
 		try {
+			System.out.println(sslsocket.isConnected());
 			System.out.println("sending data: " + message);
 			outputStream.write(message);
 			System.out.println("sending data complet...: " + message);
