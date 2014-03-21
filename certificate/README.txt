@@ -14,4 +14,6 @@ keytool -importcert -alias selfsigned -keystore cacert.jks -storepass ECSE489 -f
 
 or:
 
+Recommended:
+
 keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass ECSE489 -validity 365 -keysize 2048
