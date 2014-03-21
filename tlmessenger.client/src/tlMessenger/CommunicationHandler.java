@@ -7,10 +7,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+
+
+
 
 
 
@@ -93,12 +97,10 @@ public class CommunicationHandler implements Runnable{
 			System.out.println("Cannot get server IP address");
 			return false;
 		}
-		System.setProperty("javax.net.ssl.trustStore", "./certificate/keystore.jks");
-		System.setProperty("javax.net.ssl.trustStorePassword", "ECSE489");
+	
 		try {
 			sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 			sslsocket = (SSLSocket) sslsocketfactory.createSocket(serverIp, port);
-			//serverSocket = new Socket(serverIp, port);
 			outputStream = new DataOutputStream(sslsocket.getOutputStream());
 			inputStream = sslsocket.getInputStream();
 		} catch (IOException e) {
@@ -131,12 +133,8 @@ public class CommunicationHandler implements Runnable{
 	 */
 	public boolean send(byte[] message) {
 		try {
-			System.out.println(sslsocket.isConnected());
-			System.out.println("sending data: " + message);
 			outputStream.write(message);
-			System.out.println("sending data complet...: " + message);
 			outputStream.flush();
-			System.out.println("sending data complete: " + message);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -150,11 +148,16 @@ public class CommunicationHandler implements Runnable{
 		int pos = 0;
 		try {
 			while ((pos < length) && this.isRunning()) {
-				if (inputStream.available() > 0) {
+				if (inputStream.available() >= 0) {
 					pos += inputStream.read(buffer, pos , length - pos);
 				}
 			}
 
+		} catch (SocketException e) {
+			if (!e.getMessage().equals("socket closed")) {
+				e.printStackTrace();
+			}
+			TLMessenger.getInstance().stop();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -170,6 +173,7 @@ public class CommunicationHandler implements Runnable{
 		this.setRunning(true);
 		while (this.isRunning()) {
 			byte[] receiveByte1 = this.receive(12);
+			if (receiveByte1 == null) continue;
 			int dataLength = Message.expectedDataSize(receiveByte1);
 			byte[] receiveByte2 = this.receive(dataLength);
 			Message responesMessage = new Message(receiveByte1, receiveByte2);

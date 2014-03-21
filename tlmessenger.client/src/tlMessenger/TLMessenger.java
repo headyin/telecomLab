@@ -74,6 +74,12 @@ public final class TLMessenger {
 		String server = props.getProperty("server","localhost");
 		int port = Integer.parseInt(props.getProperty("port","5000"));
 		
+		System.setProperty("javax.net.ssl.trustStore", "./certificate/server.jks");
+		System.setProperty("javax.net.ssl.trustStorePassword", "ECSE489");
+		
+		System.setProperty("javax.net.ssl.keyStore", "./certificate/client.jks");
+		System.setProperty("javax.net.ssl.keyStorePassword", "ECSE489");
+		
 		TLMessenger tlMessenger = TLMessenger.getInstance();
 		//initialize the command line reader with command auto completes
 		CommandLineReader.getInstance().init(System.in,
@@ -94,12 +100,16 @@ public final class TLMessenger {
 	 */
 	public void start(String server, int port) {
 		this.isRunning = CommunicationHandler.getInstance().connect(server, port);
-		MessagePoller.getInstance().init(UserInfo.getInstance(), CommandHandler.getInstance());
-		this.pollerThread = new Thread(MessagePoller.getInstance());
-		this.receiverThread = new Thread(CommunicationHandler.getInstance());
 		
-		this.receiverThread.start();
-		this.pollerThread.start();
+		if (this.isRunning) {
+			MessagePoller.getInstance().init(UserInfo.getInstance(), CommandHandler.getInstance());
+			this.pollerThread = new Thread(MessagePoller.getInstance());
+			this.receiverThread = new Thread(CommunicationHandler.getInstance());
+			
+			this.receiverThread.start();
+			this.pollerThread.start();
+		}
+
 		
 		while (this.isRunning) {
 			String line = CommandLineReader.getInstance().readLine(">>");
@@ -107,8 +117,12 @@ public final class TLMessenger {
 		}
 		//wait until poller thread ends
 		try {
-			this.pollerThread.join();
-			this.receiverThread.join();
+			if (this.pollerThread != null) {
+				this.pollerThread.join();
+			}
+			if (this.receiverThread != null) {
+				this.receiverThread.join(100);
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

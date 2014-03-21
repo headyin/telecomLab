@@ -2,6 +2,7 @@ package networking;
 
 //import java.net.*;
 import java.io.IOException;
+
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -24,8 +25,6 @@ public class ServerSocketListener extends Thread implements IAuthenticator {
 	
 	public ServerSocketListener(int port, IResource resource) {
 		try {
-			System.setProperty("javax.net.ssl.keyStore", "./certificate/keystore.jks");
-			System.setProperty("javax.net.ssl.keyStorePassword", "ECSE489");
 			this.sslSSF = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 			this. sslserversocket =
                     (SSLServerSocket) sslSSF.createServerSocket(port);

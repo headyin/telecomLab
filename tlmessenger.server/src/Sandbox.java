@@ -51,6 +51,12 @@ public class Sandbox {
 			if (autostart)
 				start(port);
 			
+			System.setProperty("javax.net.ssl.keyStore", "./certificate/server.jks");
+			System.setProperty("javax.net.ssl.keyStorePassword", "ECSE489");
+
+			System.setProperty("javax.net.ssl.trustStore", "./certificate/client.jks");
+			System.setProperty("javax.net.ssl.trustStorePassword", "ECSE489");
+			
 			commandProcessor(port);
 			
 		} catch (FileNotFoundException e) {
