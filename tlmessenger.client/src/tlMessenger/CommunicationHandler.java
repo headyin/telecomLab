@@ -7,10 +7,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
+
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+
 
 
 import tlMessenger.command.CommandHandler;
@@ -40,10 +41,6 @@ public class CommunicationHandler implements Runnable{
 		this.running = running;
 	}
 
-	/**
-	 * socket connection to the char server
-	 */
-	private Socket serverSocket;
 	
 	private SSLSocketFactory sslsocketfactory;
     private SSLSocket sslsocket;
@@ -96,6 +93,8 @@ public class CommunicationHandler implements Runnable{
 			System.out.println("Cannot get server IP address");
 			return false;
 		}
+		System.setProperty("javax.net.ssl.keyStore", "./certificate/cacert.key");
+		System.setProperty("javax.net.ssl.keyStorePassword", "ECSE489");
 		try {
 			sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 			sslsocket = (SSLSocket) sslsocketfactory.createSocket(serverIp, port);
@@ -114,9 +113,9 @@ public class CommunicationHandler implements Runnable{
 	 * @return true: successful; false: failed
 	 */
 	public boolean disconnect() {
-		if ((this.serverSocket.isConnected()) && (!this.serverSocket.isClosed())) {
+		if ((this.sslsocket.isConnected()) && (!this.sslsocket.isClosed())) {
 			try {
-				this.serverSocket.close();
+				this.sslsocket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
@@ -132,8 +131,12 @@ public class CommunicationHandler implements Runnable{
 	 */
 	public boolean send(byte[] message) {
 		try {
+			System.out.println("sending data: " + message);
 			outputStream.write(message);
+			System.out.println("sending data complet...: " + message);
 			outputStream.flush();
+			System.out.println("sending data complete: " + message);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;

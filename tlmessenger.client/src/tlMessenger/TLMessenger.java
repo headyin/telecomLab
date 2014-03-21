@@ -3,6 +3,12 @@
  */
 package tlMessenger;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 import tlMessenger.command.CommandHandler;
 import tlMessenger.data.UserInfo;
 import tlMessenger.ui.CommandLineReader;
@@ -12,6 +18,8 @@ import tlMessenger.ui.CommandLineReader;
  *
  */
 public final class TLMessenger {
+
+	public static final String configfile = "./config/client.cfg";
 	
 	/**
 	 * Singleton class instance
@@ -49,11 +57,28 @@ public final class TLMessenger {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		File configfolder = new File("./config");
+		if (!configfolder.exists()) {
+			System.out.println("Creating config directory");
+			configfolder.mkdir();
+		}
+		Properties props = new Properties();
+		try {
+			props.load(new FileInputStream(configfile));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		String server = props.getProperty("server","localhost");
+		int port = Integer.parseInt(props.getProperty("port","5000"));
+		
 		TLMessenger tlMessenger = TLMessenger.getInstance();
 		//initialize the command line reader with command auto completes
 		CommandLineReader.getInstance().init(System.in,
 				CommandHandler.getInstance().getCommandNameArray());
-		tlMessenger.start();
+		tlMessenger.start(server, port);
 	}
 	
 	/**
@@ -67,8 +92,8 @@ public final class TLMessenger {
 	/**
 	 * 
 	 */
-	public void start() {
-		this.isRunning = CommunicationHandler.getInstance().connect("dsp2014.ece.mcgill.ca", 5000);
+	public void start(String server, int port) {
+		this.isRunning = CommunicationHandler.getInstance().connect(server, port);
 		MessagePoller.getInstance().init(UserInfo.getInstance(), CommandHandler.getInstance());
 		this.pollerThread = new Thread(MessagePoller.getInstance());
 		this.receiverThread = new Thread(CommunicationHandler.getInstance());

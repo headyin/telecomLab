@@ -2,8 +2,9 @@ package networking;
 
 import java.io.*;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.nio.ByteBuffer;
+
+import javax.net.ssl.SSLSocket;
 
 import database.IResource;
 import logging.LogLevel;
@@ -15,7 +16,7 @@ import networking.protocol.types.MessageType;
 public class ClientProcessor extends Thread implements IAsyncClientWriter {
 
 	private boolean alive;
-	private Socket s;
+	private SSLSocket s;
 
 	private InputStream rawIn;
 	private OutputStream rawOut;
@@ -23,7 +24,7 @@ public class ClientProcessor extends Thread implements IAsyncClientWriter {
 	private IncomingPacketHandler processor;
 	private static final int MAXIMUM_PACKET_SIZE = 262144; // bytes = 256 KB
 
-	public ClientProcessor(Socket s, IResource resource,
+	public ClientProcessor(SSLSocket s, IResource resource,
 			AuthenticationManager manager) {
 		try {
 			this.s = s;

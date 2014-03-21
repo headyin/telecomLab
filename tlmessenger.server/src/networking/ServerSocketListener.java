@@ -24,6 +24,8 @@ public class ServerSocketListener extends Thread implements IAuthenticator {
 	
 	public ServerSocketListener(int port, IResource resource) {
 		try {
+			System.setProperty("javax.net.ssl.keyStore", "./certificate/cacert.key");
+			System.setProperty("javax.net.ssl.keyStorePassword", "ECSE489");
 			this.sslSSF = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 			this. sslserversocket =
                     (SSLServerSocket) sslSSF.createServerSocket(port);
@@ -34,7 +36,7 @@ public class ServerSocketListener extends Thread implements IAuthenticator {
 			
 			Logfile.writeToFile("Listening for incoming connections on port: " + port, LogLevel.INFO);
 		} catch (IOException e) {
-			Logfile.writeToFile("Failed to open server socket due to error: " + e.getMessage(), LogLevel.CRITICAL);
+			Logfile.writeToFile("Failed to open server socket due to error: " + e.getMessage() + "\n" + e.getCause(), LogLevel.CRITICAL);
 			alive = false;
 		}
 	}
