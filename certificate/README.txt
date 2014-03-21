@@ -10,9 +10,7 @@ openssl req -new -x509 -key privkey.pem -out cacert.pem -days 365
 
 3. generate keystore based on the SLL certificate
 
-keytool -import -file cacert.pem -keystore cacert.key
-
-keysotre password: ECSE489
+keytool -importcert -alias selfsigned -keystore cacert.jks -storepass ECSE489 -file cacert.pem -trustcacerts
 
 or:
 
