@@ -13,3 +13,7 @@ openssl req -new -x509 -key privkey.pem -out cacert.pem -days 365
 keytool -import -file cacert.pem -keystore cacert.key
 
 keysotre password: ECSE489
+
+or:
+
+keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass ECSE489 -validity 365 -keysize 2048
