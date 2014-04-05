@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import jline.ConsoleReader;
+import jline.FileNameCompletor;
 import jline.SimpleCompletor;
 
 /**
@@ -31,6 +32,17 @@ public class CommandLineReader {
 	 * jline console reader
 	 */
 	private ConsoleReader reader;
+	
+	
+	/**
+	 * jline command completor
+	 */
+	private SimpleCompletor simpleComletor = null;
+	
+	/**
+	 * jline file name completor
+	 */
+	private FileNameCompletor fileNameCompletor = null;
 	
 	/**
 	 * private constructor
@@ -67,8 +79,9 @@ public class CommandLineReader {
 		}
 		reader.setInput(in);
 		reader.setBellEnabled(false);
-		SimpleCompletor completor = new SimpleCompletor(completorString);
-		reader.addCompletor(completor);
+		simpleComletor = new SimpleCompletor(completorString);
+		fileNameCompletor = new FileNameCompletor();
+		reader.addCompletor(simpleComletor);
 	}
 	
 	/**
@@ -101,14 +114,32 @@ public class CommandLineReader {
 	 * @param prompt
 	 * @return
 	 */
-	public String readLine(String prompt, Character mask)
-	{
+	public String readLine(String prompt, Character mask) {
 		String line = "";
 		try {
 			line = this.reader.readLine(prompt, mask);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return line;
+	}
+	
+	/**
+	 * read one line with specified prompt and file name auti complete
+	 * @param prompt
+	 * @return
+	 */
+	public String readFileName(String prompt) {
+		String line = "";
+		
+		this.reader.removeCompletor(simpleComletor);
+		this.reader.addCompletor(fileNameCompletor);
+		
+		line = this.readLine(prompt, null);
+		
+		this.reader.removeCompletor(fileNameCompletor);
+		this.reader.addCompletor(simpleComletor);
+		
 		return line;
 	}
 

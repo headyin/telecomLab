@@ -22,7 +22,7 @@ public class SendFileCommand extends Command {
 			System.out.println("User name cannot contain a comma, please enter again");
 			destUserName = CommandLineReader.getInstance().readLine("est_username:");
 		}
-		String sendFilePath = CommandLineReader.getInstance().readLine("file:");
+		String sendFilePath = CommandLineReader.getInstance().readFileName("file:");
 		File file = new File(sendFilePath);
 		FileInputStream fileInputStream = null;
 		BufferedInputStream bufferedInputStream = null;
