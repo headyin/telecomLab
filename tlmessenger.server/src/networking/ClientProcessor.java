@@ -23,7 +23,7 @@ public class ClientProcessor extends Thread implements IAsyncClientWriter {
 	private OutputStream rawOut;
 
 	private IncomingPacketHandler processor;
-	private static final int MAXIMUM_PACKET_SIZE = 262144; // bytes = 256 KB
+	private static final int MAXIMUM_PACKET_SIZE = 0x7FFFFFFF; // 2 G, not bytes = 256 KB
 
 	public ClientProcessor(SSLSocket s, IResource resource,
 			AuthenticationManager manager) {
@@ -78,9 +78,16 @@ public class ClientProcessor extends Thread implements IAsyncClientWriter {
 								+ MAXIMUM_PACKET_SIZE + ", inclusive")
 								.getBytes());
 			}
+			System.out.println("s=" + s + "\n");
 
 			byte[] data = new byte[s];
-			rawIn.read(data, 0, s);
+			int totalByteRead = 0;
+			int byteRead = 0;
+			while ((totalByteRead < s) &&
+				   ((byteRead = rawIn.read(data, totalByteRead, s - totalByteRead)) != -1)) {
+				totalByteRead += byteRead;
+			}
+			System.out.println("total byte read: " + totalByteRead + "\n");
 
 			return new UnformattedPacket(hArray, h2Array, sArray, data);
 		} catch (IOException e) {
