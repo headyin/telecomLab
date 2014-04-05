@@ -48,7 +48,6 @@ public class QueryFileCommand extends Command {
 				String temps = userFrom + "," + time + "," + fileName + ",";
 				fileData = new byte[message.getbData().length - temps.length()];
 				System.arraycopy(message.getbData(), temps.length(), fileData, 0, fileData.length);
-				System.out.println("file data lenght: "+ fileData.length);
 				System.out.println("New file from " + userFrom + " at " + time + " : " + fileName + "\n");
 				File file = new File(fileName);
 				FileOutputStream fileOutputStream = null;

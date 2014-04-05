@@ -28,7 +28,7 @@ public class SendFileCommand extends Command {
 		BufferedInputStream bufferedInputStream = null;
 		try {
 			if (file.length() > Message.MAX_DATA_LENGTH) {
-				System.out.println("The file is too large (maximum 2GB)");
+				System.out.println("The file is too large (maximum 100MB)");
 				return null;
 			}
 			String fileName = file.getName();
@@ -41,7 +41,6 @@ public class SendFileCommand extends Command {
 			int totalByteRead = 0, byteRead = 0;
 			while ((totalByteRead < fileSize) &&
 					((byteRead = bufferedInputStream.read(buffer, totalByteRead + data1.length(), fileSize - totalByteRead)) != -1)) {
-				System.out.println(fileSize + "," + totalByteRead + "," + byteRead + "\n");
 				totalByteRead += byteRead;
 			}
 			Message message = new Message(MessageType.SEND_FILE, 0,buffer);

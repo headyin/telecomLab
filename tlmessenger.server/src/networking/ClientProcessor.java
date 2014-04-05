@@ -78,7 +78,6 @@ public class ClientProcessor extends Thread implements IAsyncClientWriter {
 								+ MAXIMUM_PACKET_SIZE + ", inclusive")
 								.getBytes());
 			}
-			System.out.println("s=" + s + "\n");
 
 			byte[] data = new byte[s];
 			int totalByteRead = 0;
@@ -87,7 +86,6 @@ public class ClientProcessor extends Thread implements IAsyncClientWriter {
 				   ((byteRead = rawIn.read(data, totalByteRead, s - totalByteRead)) != -1)) {
 				totalByteRead += byteRead;
 			}
-			System.out.println("total byte read: " + totalByteRead + "\n");
 
 			return new UnformattedPacket(hArray, h2Array, sArray, data);
 		} catch (IOException e) {

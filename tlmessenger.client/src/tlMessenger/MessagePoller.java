@@ -113,11 +113,18 @@ public class MessagePoller implements Runnable {
 	public void run()
 	{
 		this.setRunning(true);
+		int seconds = 0;
 		while (this.isRunning()) {
-			if (this.userInfo.isLoggedIn() && this.userInfo.isStorageCreated()) {
-				this.commandHandler.handleInputCommand(MessageType.QUERY_MESSAGE.getCommandName());
-			}
 			try {
+				seconds ++;
+				if (this.userInfo.isLoggedIn() && this.userInfo.isStorageCreated()) {
+					this.commandHandler.handleInputCommand(MessageType.QUERY_MESSAGE.getCommandName());
+					if (seconds % 10 ==0) {
+						Thread.sleep(1000);
+						this.commandHandler.handleInputCommand(MessageType.QUERY_FILE.getCommandName());
+						seconds = 0;
+					}
+				}
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

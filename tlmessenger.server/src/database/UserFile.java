@@ -49,7 +49,6 @@ public class UserFile {
 		byte[] bdata = new byte[data1.length() + data.length];
 		System.arraycopy(data1.getBytes(), 0, bdata, 0, data1.length());
 		System.arraycopy(data, 0, bdata, data1.length(), data.length);
-		System.out.println("send data length + " + data.length + "," + bdata.length);
 		return bdata;
 	}
 

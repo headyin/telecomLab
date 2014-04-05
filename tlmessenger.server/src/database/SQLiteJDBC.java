@@ -353,7 +353,6 @@ public class SQLiteJDBC implements IResource {
 			stmt.close();
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
 			Logfile.writeToFile("Failed to send file from user " + sUsername + " to " + dUsername, LogLevel.ERROR);
 			return false;
 		}
@@ -383,7 +382,6 @@ public class SQLiteJDBC implements IResource {
 			
 			return userFiles.toArray(new UserFile[userFiles.size()]);
 		} catch (Exception e) {
-			e.printStackTrace();
 			Logfile.writeToFile("Failed to query files for user " + username, LogLevel.ERROR);
 			return new UserFile[0];
 		}

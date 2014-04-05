@@ -227,7 +227,6 @@ public class IncomingPacketHandler {
 					String tempData = u + "," + fileName + ",";
 					byte[] filedata = new byte[p.getPayload().length - tempData.length()];
 					System.arraycopy(p.getPayload(), tempData.length(), filedata, 0, filedata.length);
-					System.out.println("filedata length: " + filedata.length);
 
 					boolean user_exists = resource.userDataTableExists(u);
 					if (user_exists) {
