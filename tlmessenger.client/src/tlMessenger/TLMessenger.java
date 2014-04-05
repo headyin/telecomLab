@@ -107,7 +107,7 @@ public final class TLMessenger {
 			this.receiverThread = new Thread(CommunicationHandler.getInstance());
 			
 			this.receiverThread.start();
-			this.pollerThread.start();
+			//this.pollerThread.start();
 		}
 
 		

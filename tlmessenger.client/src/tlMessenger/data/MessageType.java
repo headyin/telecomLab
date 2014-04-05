@@ -17,7 +17,9 @@ public enum MessageType {
 	DELETE_USER(6, "DELETE_USER", "delete-user"),
 	CREATE_STORE(7, "CREATE_STORE", "create-store"),
 	SEND_MESSAGE(8, "SEND_MESSAGE", "send-message"),
-	QUERY_MESSAGE(9, "QUERY_MESSAGE", "query-message");
+	QUERY_MESSAGE(9, "QUERY_MESSAGE", "query-message"),
+	SEND_FILE(10, "SEND_FILE", "send-file"),
+	QUERY_FILE(11, "QUERY_FILE", "query-file");
 
 	public static final int EXIT_VALUE = 0;
 	public static final int BADLY_FORMATTED_MESSAGE_VALUE = 1;
@@ -29,6 +31,9 @@ public enum MessageType {
 	public static final int CREATE_STORE_VALUE = 7;
 	public static final int SEND_MESSAGE_VALUE = 8;
 	public static final int QUERY_MESSAGE_VALUE = 9;
+	public static final int SEND_FILE_VALUE = 10;
+	public static final int QUERY_FILE_VALUE = 11;
+
 	/**
 	 * the value of message type
 	 */
@@ -80,6 +85,8 @@ public enum MessageType {
 		case CREATE_STORE_VALUE: return CREATE_STORE;
 		case SEND_MESSAGE_VALUE: return SEND_MESSAGE;
 		case QUERY_MESSAGE_VALUE: return QUERY_MESSAGE;
+		case SEND_FILE_VALUE: return SEND_FILE;
+		case QUERY_FILE_VALUE: return QUERY_FILE;
 		default: return null;
 		}
 	}

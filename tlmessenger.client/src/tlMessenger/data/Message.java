@@ -177,14 +177,14 @@ public class Message {
 		}
 		byte[] messageTypeInByte = ByteBuffer.allocate(4).putInt(this.messageType.getValue()).array();
 		byte[] subMessageTypeInByte = ByteBuffer.allocate(4).putInt(this.subMessageType).array();
-		byte[] sizeInByte = ByteBuffer.allocate(4).putInt(this.size).array();
 		byte[] dataInByte = this.data.getBytes();
+		byte[] sizeInByte = ByteBuffer.allocate(4).putInt(dataInByte.length).array();
 		this.binaryFormatMessage = new byte[4*3 + dataInByte.length];
-		//System.out.println(this.data.length() + "\n" + dataInByte.length);
+		System.out.println(this.data.length() + "\n" + dataInByte.length + "\n" + this.size + "\n");
 		System.arraycopy(messageTypeInByte, 0, this.binaryFormatMessage, 0, 4);
 		System.arraycopy(subMessageTypeInByte, 0, this.binaryFormatMessage, 4, 4);
 		System.arraycopy(sizeInByte, 0, this.binaryFormatMessage, 8, 4);
-		System.arraycopy(dataInByte, 0, this.binaryFormatMessage, 12, this.size);
+		System.arraycopy(dataInByte, 0, this.binaryFormatMessage, 12, dataInByte.length);
 		this.fieldChanged = false;
 	}
 	

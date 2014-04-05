@@ -75,6 +75,12 @@ public class CommandHandler {
 		//create query-message command
 		command = new QueryMessageCommand();
 		commandMap.put(command.getName(), command);
+		//create send-file command
+		command = new SendFileCommand();
+		commandMap.put(command.getName(), command);
+		//create query-file command
+		command = new QueryFileCommand();
+		commandMap.put(command.getName(), command);
 		
 		commandNameArray = new String[commandMap.size()];
 		commandMap.keySet().toArray(commandNameArray);
