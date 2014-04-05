@@ -23,7 +23,7 @@ public class ClientProcessor extends Thread implements IAsyncClientWriter {
 	private OutputStream rawOut;
 
 	private IncomingPacketHandler processor;
-	private static final int MAXIMUM_PACKET_SIZE = 0x7FFFFFFF; // 2 G, not bytes = 256 KB
+	private static final int MAXIMUM_PACKET_SIZE = 104857600; // 100Mb, not bytes = 256 KB
 
 	public ClientProcessor(SSLSocket s, IResource resource,
 			AuthenticationManager manager) {

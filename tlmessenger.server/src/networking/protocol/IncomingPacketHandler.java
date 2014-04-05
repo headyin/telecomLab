@@ -224,11 +224,14 @@ public class IncomingPacketHandler {
 				if (st.countTokens() >= 3) {
 					String u = st.nextToken();
 					String fileName = st.nextToken();
-					String filedata = getRemaining(payload, u.length() + fileName.length());
+					String tempData = u + "," + fileName + ",";
+					byte[] filedata = new byte[p.getPayload().length - tempData.length()];
+					System.arraycopy(p.getPayload(), tempData.length(), filedata, 0, filedata.length);
+					System.out.println("filedata length: " + filedata.length);
 
 					boolean user_exists = resource.userDataTableExists(u);
 					if (user_exists) {
-						boolean sent = resource.sendFileToUser(u, auth.Username, fileName, filedata.length(), filedata);
+						boolean sent = resource.sendFileToUser(u, auth.Username, fileName, filedata.length, filedata);
 						if (sent) {
 							code = SendFileToUser.FILE_SENT.getInt();
 							msg = "File sent";
@@ -265,7 +268,7 @@ public class IncomingPacketHandler {
 					// This loop sends the first (n-1) messages over the wire before returning the
 					// last message in the queue to the processing thread 
 					for (; i < userFiles.length - 1; i++) {
-						String filetxt = userFiles[i].format();
+						byte[] filetxt = userFiles[i].binaryFormat();
 						UnformattedPacket up = UnformattedPacket
 								.CreateResponsePacket(
 										MessageType.QUERY_FILES.getInt(),
@@ -275,7 +278,9 @@ public class IncomingPacketHandler {
 					UserFile lastFile = userFiles[i];
 
 					code = QueryFiles.FILES.getInt();
-					msg = lastFile.format();
+					byte[] bmsg = lastFile.binaryFormat();
+					return UnformattedPacket.CreateResponsePacket(
+							MessageType.QUERY_FILES.getInt(), code, bmsg);
 				} else {
 					code = QueryFiles.NO_FILES.getInt();
 					msg = "No files available";

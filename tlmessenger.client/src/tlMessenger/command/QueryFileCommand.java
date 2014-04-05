@@ -39,21 +39,22 @@ public class QueryFileCommand extends Command {
 			String userFrom = null;
 			String time = null;
 			String fileName = null;
-			String fileData = null;
-			int headerlength = 0;
+			byte[] fileData = null;
 			StringTokenizer st = new StringTokenizer(text, ",");
 			if (st.countTokens() >= 4) {
 				userFrom = st.nextToken();
 				time = st.nextToken();
 				fileName = st.nextToken();
-				headerlength = userFrom.length() + time.length() + fileName.length() + 3;
-				fileData = text.substring(headerlength + 1);
+				String temps = userFrom + "," + time + "," + fileName + ",";
+				fileData = new byte[message.getbData().length - temps.length()];
+				System.arraycopy(message.getbData(), temps.length(), fileData, 0, fileData.length);
+				System.out.println("file data lenght: "+ fileData.length);
 				System.out.println("New file from " + userFrom + " at " + time + " : " + fileName + "\n");
 				File file = new File(fileName);
 				FileOutputStream fileOutputStream = null;
 				try {
 					fileOutputStream = new FileOutputStream(file);
-					fileOutputStream.write(fileData.getBytes());
+					fileOutputStream.write(fileData);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

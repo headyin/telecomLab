@@ -342,13 +342,13 @@ public class SQLiteJDBC implements IResource {
 	}
 	
 	public synchronized boolean sendFileToUser(String dUsername, String sUsername, String filename,
-			                                   int fileSize, String filedata){
+			                                   int fileSize, byte[] filedata){
 		try {
 			String sql = "INSERT INTO " + dUsername + "_file (USERNAME, FILENAME, DATA, FILESIZE, TIME) VALUES ('"
 		               + sUsername + "','" + filename + "'," + "?" + ",'" + Integer.toString(fileSize)
 		               + "','" + getDate() + "');";
 			PreparedStatement stmt = c.prepareStatement(sql);
-			stmt.setBytes(1, filedata.getBytes());
+			stmt.setBytes(1, filedata);
 			stmt.executeUpdate();
 			stmt.close();
 			return true;

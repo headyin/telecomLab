@@ -3,16 +3,13 @@ package tlMessenger.command;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Arrays;
 
 import tlMessenger.data.Message;
 import tlMessenger.data.MessageType;
 import tlMessenger.ui.CommandLineReader;
 
 public class SendFileCommand extends Command {
-	
-	public static final int MAX_FILE_LENGTH = 0x7FFFFFFF; // 2GB -1 Byte
-	
+		
 	SendFileCommand () {
 		this.name = MessageType.SEND_FILE.getCommandName();
 	}
@@ -30,7 +27,7 @@ public class SendFileCommand extends Command {
 		FileInputStream fileInputStream = null;
 		BufferedInputStream bufferedInputStream = null;
 		try {
-			if (file.length() > MAX_FILE_LENGTH) {
+			if (file.length() > Message.MAX_DATA_LENGTH) {
 				System.out.println("The file is too large (maximum 2GB)");
 				return null;
 			}
@@ -38,14 +35,16 @@ public class SendFileCommand extends Command {
 			int fileSize = (int) file.length(); 
 			fileInputStream = new FileInputStream(file);
 			bufferedInputStream = new BufferedInputStream(fileInputStream, fileSize);
-			StringBuilder stringbuilder = new StringBuilder(fileSize + 1);
-			byte[] buffer = new byte[fileSize];
-			while (bufferedInputStream.read(buffer) != -1) {
-				stringbuilder.append(new String(buffer));
-				Arrays.fill(buffer, (byte) 0);
+			String data1 = destUserName + "," + fileName + ",";
+			byte[] buffer = new byte[fileSize + data1.length()];
+			System.arraycopy(data1.getBytes(),0, buffer, 0, data1.length());
+			int totalByteRead = 0, byteRead = 0;
+			while ((totalByteRead < fileSize) &&
+					((byteRead = bufferedInputStream.read(buffer, totalByteRead + data1.length(), fileSize - totalByteRead)) != -1)) {
+				System.out.println(fileSize + "," + totalByteRead + "," + byteRead + "\n");
+				totalByteRead += byteRead;
 			}
-			String fileData = stringbuilder.toString();
-			Message message = new Message(MessageType.SEND_FILE, 0, destUserName + "," + fileName + "," + fileData);
+			Message message = new Message(MessageType.SEND_FILE, 0,buffer);
 			message.setHaveRespones(true);
 			return message;
 		} catch (Exception e) {

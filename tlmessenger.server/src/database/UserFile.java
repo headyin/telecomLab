@@ -36,6 +36,22 @@ public class UserFile {
 		sb.append(new String(data));
 		return sb.toString();
 	}
+	
+	public byte[] binaryFormat() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(username);
+		sb.append(IncomingPacketHandler.FIELD_TERMINATOR);
+		sb.append(time);
+		sb.append(IncomingPacketHandler.FIELD_TERMINATOR);
+		sb.append(filename);
+		sb.append(IncomingPacketHandler.FIELD_TERMINATOR);
+		String data1 = sb.toString();
+		byte[] bdata = new byte[data1.length() + data.length];
+		System.arraycopy(data1.getBytes(), 0, bdata, 0, data1.length());
+		System.arraycopy(data, 0, bdata, data1.length(), data.length);
+		System.out.println("send data length + " + data.length + "," + bdata.length);
+		return bdata;
+	}
 
 
 }

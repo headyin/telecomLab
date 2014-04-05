@@ -17,6 +17,9 @@ public class Message {
 	public Message(byte[] binaryMessage) {
 		this.binaryFormatMessage = new byte[binaryMessage.length];
 		System.arraycopy(binaryMessage, 0, binaryFormatMessage, 0, binaryMessage.length);
+		this.bdata = new byte[binaryMessage.length - 12];
+		System.arraycopy(binaryMessage, 12, bdata, 0, bdata.length);
+
 		this.disassembleMessage();
 		this.fieldChanged = false;
 	}
@@ -30,7 +33,29 @@ public class Message {
 		this.binaryFormatMessage = new byte[12 + dataBytes.length];
 		System.arraycopy(first12Bytes, 0, this.binaryFormatMessage, 0, 12);
 		System.arraycopy(dataBytes, 0, this.binaryFormatMessage, 12, dataBytes.length);
+		this.bdata = new byte[dataBytes.length];
+		System.arraycopy(dataBytes, 0, bdata, 0, bdata.length);
 		this.disassembleMessage();
+		this.fieldChanged = false;
+	}
+	
+	public Message(MessageType messageType, int subMessageType, byte[] data) {
+		bdata = new byte[data.length];
+		System.arraycopy(data, 0, bdata, 0, data.length);
+		if (messageType == null) {
+			messageType = MessageType.BADLY_FORMATTED_MESSAGE;
+		}
+
+		this.binaryFormatMessage = new byte[MAX_MESSAGE_SIZE];
+		this.messageType = messageType;
+		this.subMessageType = subMessageType;
+		int dataLength = data.length;
+		if (dataLength > MAX_DATA_LENGTH) {
+			dataLength = MAX_DATA_LENGTH;
+		}
+		this.data = new String(data,0, dataLength);
+		this.size = this.data.length();
+		this.ressambleMessage();
 		this.fieldChanged = false;
 	}
 	
@@ -41,34 +66,18 @@ public class Message {
 	 * @param data
 	 */
 	public Message(MessageType messageType, int subMessageType, String data) {
-		if (messageType == null) {
-			messageType = MessageType.BADLY_FORMATTED_MESSAGE;
-		}
-		if (data == null) {
-			data = "";
-		}
-		this.binaryFormatMessage = new byte[MAX_MESSAGE_SIZE];
-		this.messageType = messageType;
-		this.subMessageType = subMessageType;
-		int dataLength = data.length();
-		if (dataLength > MAX_DATA_LENGTH) {
-			dataLength = MAX_DATA_LENGTH;
-		}
-		this.data = new String(data.substring(0, dataLength));
-		this.size = this.data.length();
-		this.ressambleMessage();
-		this.fieldChanged = false;
+		this(messageType, subMessageType, data.getBytes());
 	}
 	
 	/**
 	 * the maximum packet size is 262157 bytes
 	 */
-	private final int MAX_MESSAGE_SIZE  = 262156;
+	public static final int MAX_MESSAGE_SIZE  = 104857612;
 	
 	/**
 	 * the maximum data size
 	 */
-	private final int MAX_DATA_LENGTH = 256144;
+	public static final int MAX_DATA_LENGTH = 104857600;
 	
 	private boolean fieldChanged;
 	
@@ -101,6 +110,12 @@ public class Message {
 	 * message data field
 	 */
 	private String data;
+	
+	private byte[] bdata;
+	
+	public byte[] getbData() {
+		return this.bdata;
+	}
 	
 	/**
 	 * @return the messageType
@@ -177,10 +192,10 @@ public class Message {
 		}
 		byte[] messageTypeInByte = ByteBuffer.allocate(4).putInt(this.messageType.getValue()).array();
 		byte[] subMessageTypeInByte = ByteBuffer.allocate(4).putInt(this.subMessageType).array();
-		byte[] dataInByte = this.data.getBytes();
+		byte[] dataInByte = this.bdata;
 		byte[] sizeInByte = ByteBuffer.allocate(4).putInt(dataInByte.length).array();
 		this.binaryFormatMessage = new byte[4*3 + dataInByte.length];
-		System.out.println(this.data.length() + "\n" + dataInByte.length + "\n" + this.size + "\n");
+		//System.out.println(this.data.length() + "\n" + dataInByte.length + "\n" + this.size + "\n");
 		System.arraycopy(messageTypeInByte, 0, this.binaryFormatMessage, 0, 4);
 		System.arraycopy(subMessageTypeInByte, 0, this.binaryFormatMessage, 4, 4);
 		System.arraycopy(sizeInByte, 0, this.binaryFormatMessage, 8, 4);
